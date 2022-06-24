@@ -21,7 +21,7 @@ export default async function handler(
 ) {
     let url = req.query['url'] ?? [];
     if (typeof url === 'string') {
-        const byPassProxy = ((req.query['bypass'] ?? 'false') === 'true') || enableByPassProxy(url);
+        const byPassProxy = (req.query['bypass'] ?? 'false') === 'true';
         const options = byPassProxy ? byPassHeaders() : {};
 
         const response = await fetch(url, options);
