@@ -5,6 +5,10 @@ import {getHighlights, setHighlights} from "./database";
 const hlRoot = document.getElementById('highlighter-root');
 
 const HighlighterMenu = () => {
+    let obj = {
+        a: 10,
+        b: 50
+    };
     const highlightSelection = (color: string) => {
         highlighter?.highlightSelection(`highlight-${color}`);
         highlightUpdated();
@@ -74,8 +78,11 @@ window.onload = async function() {
     }
 };
 
-window.addEventListener('mouseup', (event) => {
+window.addEventListener(
+    'mouseup',
+    (event) => {
     let selection = window.getSelection()
+        console.log(event);
     if (!selection?.isCollapsed) {
         let range = selection?.getRangeAt(0);
         let position = range?.getBoundingClientRect();

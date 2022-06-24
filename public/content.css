@@ -1,6 +1,7 @@
 :root {
     --weight: 3px;
     --default-font: "Tahoma";
+    --reader-font: 'Iowan Old Style', serif;
 }
 
 #highlighter-root {
@@ -136,4 +137,11 @@
 .highlight-color-selector.clear:hover {
     border-color: #FFFFFFee;
     color: #FFFFFF;
+}
+
+.reader-mode {
+    max-width: 700px;
+    font-family: var(--reader-font);
+    font-size: 16px;
+    margin: 60px auto;
 }
