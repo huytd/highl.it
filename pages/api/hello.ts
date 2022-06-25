@@ -23,31 +23,40 @@ export default async function handler(
     if (typeof url === 'string') {
         const byPassProxy = (req.query['bypass'] ?? 'false') === 'true';
         const options = byPassProxy ? byPassHeaders() : {};
-
+        let html = "";
         const response = await fetch(url, options);
-        let html = await response.text();
+        
+        if (response.status === 200) {
+            let html = await response.text();
+            const parsedUrl = new URL(url);
+            const hostname = parsedUrl.hostname;
 
-        const parsedUrl = new URL(url);
-        const hostname = parsedUrl.hostname;
+            const readMode = (req.query['reader'] ?? 'false') === 'true';
+            if (readMode) {
+                const doc = new JSDOM(html);
+                const article = new Readability(doc.window.document).parse();
 
-        const readMode = (req.query['reader'] ?? 'false') === 'true';
-        if (readMode) {
-            const doc = new JSDOM(html);
-            const article = new Readability(doc.window.document).parse();
-
-            html = `${HLCONTENT_BOF}<body class="reader-mode"><h1>${article?.title ?? ''}</h1><br/><p></p>${article?.content ?? ''}</body>${HLCONTENT_EOF(url)}`;
+                html = `${HLCONTENT_BOF}<body class="reader-mode"><h1>${article?.title ?? ''}</h1><br/><p></p>${article?.content ?? ''}</body>${HLCONTENT_EOF(url)}`;
+            } else {
+                html = html
+                    .replace(/src="\//g, `src="https://${hostname}/`)
+                    .replace(/src='\//g, `src='https://${hostname}/`)
+                    .replace(/href="\//g, `href="https://${hostname}/`)
+                    .replace(/href='\//g, `href='https://${hostname}/`);
+                html = html.replace(/<script(.|\n)*?<\/script>/g, '');
+                html = html.replace(/<body(.*)>/, `${HLCONTENT_BOF}<body$1>${HLCONTENT_EOF(url)}`);
+            }
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(html);
         } else {
-            html = html
-                .replace(/src="\//g, `src="https://${hostname}/`)
-                .replace(/src='\//g, `src='https://${hostname}/`)
-                .replace(/href="\//g, `href="https://${hostname}/`)
-                .replace(/href='\//g, `href='https://${hostname}/`);
-            html = html.replace(/<script(.|\n)*?<\/script>/g, '');
-            html = html.replace(/<body(.*)>/, `${HLCONTENT_BOF}<body$1>${HLCONTENT_EOF(url)}`);
+            html = `${HLCONTENT_BOF}<body class="reader-mode">
+            <h1>Uh oh! Something went wrong ;(</h1><br/><p></p>
+            <p>Look like this URL is not supported by Highl.it just yet, we're working on fixing it!</p>
+            <p>In the meantime, please visit the <a href="${url}">original page</a> to read.</p>
+            </body>`;
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(html);
         }
-
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send(html);
     } else {
         res.status(404).send('URL NOT FOUND');
     }
