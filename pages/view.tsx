@@ -3,6 +3,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { GetServerSideProps } from 'next'
 import Script from "next/script";
+import Link from 'next/link';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const url = context.query['url'] as string;
@@ -27,10 +28,9 @@ const Viewer: NextPage = ({ url, reader, bypass }: InferGetServerSidePropsType<t
 
             <iframe className={styles.content} src={`/api/hello?url=${url}&reader=${reader}&bypass=${bypass}`}/>
             <div className={styles.toolbox}>
-                <a href={url}>← Back to original page</a>
+                <Link href={url}>← Back to original page</Link>
                 <div className={styles.flexSeparator}/>
-                {/* <span className={styles.separator}/> */}
-                <a href={'#'}>Go to library →</a>
+                <Link href={'/library'}>Go to library →</Link>
             </div>
 
             <Script data-domain="highl.it" src="https://analytics.huy.rocks/js/plausible.js"></Script>

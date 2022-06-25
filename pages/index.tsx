@@ -3,7 +3,7 @@ import Script from 'next/script'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useRouter } from 'next/router'
-import { Button, Divider, Flex, FormControl, FormLabel, Heading, HStack, Input, Switch, Text, VStack } from '@chakra-ui/react';
+import { Button, Divider, Flex, Heading, Input, Text, VStack } from '@chakra-ui/react';
 import { ChangeEvent, useState } from 'react';
 
 const Index: NextPage = () => {
@@ -25,6 +25,10 @@ const Index: NextPage = () => {
         router.push(`/https://fs.blog/reading/`);
     };
 
+    const openLibrary = () => {
+        router.push(`/library`);
+    };
+
     return (
         <div className={styles.container}>
             <Head>
@@ -33,8 +37,8 @@ const Index: NextPage = () => {
             </Head>
 
             <Flex minH={"100vh"} align={"center"} justify={"center"}>
-                <VStack maxWidth={400} spacing={4} textAlign={"center"}>
-                    <Heading>Highlight It!</Heading>
+                <VStack maxWidth={400} spacing={5} textAlign={"center"}>
+                    <Heading size={"2xl"}>Highlight It!</Heading>
                     <Text>Take note and highlight anywhere, anytime!</Text>
                     <Input
                         width={"full"}
@@ -47,7 +51,7 @@ const Index: NextPage = () => {
                     <Button width={"full"} variant={"link"} onClick={openExample}>See some examples</Button>
                     <Divider></Divider>
                     <Text>You can also create an account to manage your links online and access them from any device!</Text>
-                    <Button width={"full"} variant={"outline"}>Create an account</Button>
+                    <Button onClick={openLibrary} width={"full"} variant={"outline"}>Create an account</Button>
                 </VStack>
             </Flex>
 
