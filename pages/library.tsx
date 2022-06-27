@@ -85,9 +85,9 @@ const Library: NextPage = () => {
                         <Heading paddingLeft={6} paddingRight={6} width={"250px"} size="md">My Library</Heading>
                         <InputGroup flex={1}>
                             <InputLeftElement
-                                pointerEvents='none'
-                                children={<Icon as={FiSearch} />}
-                            />
+                                pointerEvents='none'>
+                                <Icon as={FiSearch} />
+                            </InputLeftElement>
                             <Input placeholder='Search anything...' />
                         </InputGroup>
                         <HStack width={"300px"} justifyContent={"end"}>
@@ -105,8 +105,8 @@ const Library: NextPage = () => {
             <Container maxW="container.xl" padding={6}>
                 <HStack spacing={3} alignItems={"start"}>
                     <VStack width={"250px"} padding={6} spacing={4} alignItems="start">
-                        {SideBarLinks.map(item => (
-                            <Link href={`/library/${item.url}`}>
+                        {SideBarLinks.map((item, idx: number) => (
+                            <Link key={idx} href={`/library/${item.url}`}>
                                 <Flex cursor={"pointer"} alignItems={"center"} _hover={{ color: "green.600" }}>
                                     <Icon as={item.icon} marginRight={2}></Icon>
                                     <Text>{item.name}</Text>
@@ -116,8 +116,9 @@ const Library: NextPage = () => {
                     </VStack>
                     <Box flex={1}>
                         <UnorderedList listStyleType={"none"} margin={0} padding={0}>
-                            {LibraryData.map(item => (
+                            {LibraryData.map((item, idx: number) => (
                                 <ListItem
+                                    key={idx}
                                     cursor={"pointer"}
                                     borderBottom={"1px"}
                                     borderColor={"gray.50"}
@@ -134,8 +135,8 @@ const Library: NextPage = () => {
                                             <Text>{item.description}</Text>
                                             <HStack spacing={2}>
                                                 <Text fontSize={"sm"} color={"gray.500"}>Saved on {dayjs(item.pubDate).format("DD/MM/YYYY")} · {item.notes || 0} notes</Text>
-                                                {item.tags.map(tag => (
-                                                    <Tag colorScheme={"gray"}>{tag}</Tag>
+                                                {item.tags.map((tag, idx) => (
+                                                    <Tag colorScheme={"gray"} key={idx}>{tag}</Tag>
                                                 ))}
                                             </HStack>
                                         </VStack>
